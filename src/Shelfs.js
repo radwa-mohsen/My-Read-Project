@@ -1,43 +1,15 @@
 import React ,{Component} from 'react'
 import { Link } from 'react-router-dom'
-import * as BooksAPI from './BooksAPI'
+
 
 
 class Shelfs extends Component{
-	state = {
-		AllShelfsBooks : []
-	}
 
-	 componentDidMount() {
-       BooksAPI.getAll()
-      .then(books => {
-        this.setState({ AllShelfsBooks: books })
-        console.log(this.state.AllShelfsBooks)
-	  })
-  }
-  
-   onShelfUpdate = (book, shelfName) => {
-	const {AllShelfsBooks} = this.state;
-	// here we get the index of the book in the original array of book which equal the index of the edited book
-	const updateIndex = AllShelfsBooks.findIndex(originalBook => originalBook.id === book.id)
-	// now we get the book which we have to edit it's shelf property
-    const updateBook = AllShelfsBooks[updateIndex]
-    //now we edit the shelf property to the choosen by the user
-
-    updateBook.shelf = shelfName
-   // now we insert the book with new shelf into the main books array
-   BooksAPI.update(updateBook,shelfName).then(() =>{
-    this.setState({
-      AllShelfsBooks: [...AllShelfsBooks.slice(0, updateIndex), updateBook, ...AllShelfsBooks.slice(updateIndex + 1)]
-
-    })
-   })
-    
-
-	}
-
+onShelfUpdate = (book,shelfName) => {
+  this.props.onShelfUpdate(book,shelfName)
+}
 render(){
-		const {AllShelfsBooks} = this.state
+		const {AllShelfsBooks} = this.props
 		const shelfsCategory = [
         {
         	name : "Read",
@@ -49,7 +21,7 @@ render(){
         	name : "Want To Read",
         	books : AllShelfsBooks.filter((book) => book.shelf === "wantToRead")
         }]
-        console.log(shelfsCategory[1],'current')
+
     
 		return(
 			 <div className="list-books">
