@@ -26,10 +26,13 @@ class Shelfs extends Component{
 
     updateBook.shelf = shelfName
    // now we insert the book with new shelf into the main books array
+   BooksAPI.update(updateBook,shelfName).then(() =>{
     this.setState({
       AllShelfsBooks: [...AllShelfsBooks.slice(0, updateIndex), updateBook, ...AllShelfsBooks.slice(updateIndex + 1)]
 
     })
+   })
+    
 
 	}
 
