@@ -1,58 +1,58 @@
 import React ,{Component} from 'react'
 import { Link } from 'react-router-dom'
-import * as BooksAPI from './BooksAPI'
+import escapeRegExp from 'escape-string-regexp'
+import sortBy from 'sort-by'
 
 
 class Search extends Component{
+  state = {
+		query :''
+	}
 
-state = {
-    AllShelfsBooks : []
-  }
+	updateQuery = (query) => {
+		this.setState({query})
+	}
 
-   componentDidMount() {
-       BooksAPI.getAll()
-      .then(books => {
-        this.setState({ AllShelfsBooks: books })
-    })
-  }
-  
-   onShelfUpdate = (book, shelfName) => {
-    debugger
-  const {AllShelfsBooks} = this.state;
-  // here we get the index of the book in the original array of book which equal the index of the edited book
-  const updateIndex = AllShelfsBooks.findIndex(originalBook => originalBook.id === book.id)
-  // now we get the book which we have to edit it's shelf property
-    const updateBook = AllShelfsBooks[updateIndex]
-    //now we edit the shelf property to the choosen by the user
+	clearQuery = () =>{
+		this.setState({query:''})
+	}
+onShelfUpdate = (book,shelfName) => {
+  this.props.onShelfUpdate(book,shelfName)
+}
 
-    updateBook.shelf = shelfName
-   // now we insert the book with new shelf into the main books array
-   //to keep the same choice after refresh we have to update the database
-   BooksAPI.update(updateBook,shelfName).then(() =>{
-
-    this.setState({
-      AllShelfsBooks: [...AllShelfsBooks.slice(0, updateIndex), updateBook, ...AllShelfsBooks.slice(updateIndex + 1)]
-    })
-   })
-    
-
-  }
-	render(){
+render(){
+    const {query } = this.state
+    const {AllShelfsBooks} = this.props
+    let showingBooks
+    if(query){
+			const match = new RegExp(escapeRegExp(query),'i')
+			showingBooks = AllShelfsBooks.filter((book) => match.test(book.title) || match.test(book.authors)) 
+		}
+		else{
+			showingBooks = AllShelfsBooks
+		}
+		showingBooks.sort(sortBy('title'))
 		return(
-			<div className="search-books">
-            <div className="search-books-bar">
-              <Link className="close-search" to='/'>Close</Link>
-              <div className="search-books-input-wrapper">
-                <form>
-                <input type="text" placeholder="Search by title or author"/>
-                </form>
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid">
-
-              {this.props.AllShelfsBooks.map((book) => (
-                       <li>
+                  <div className="bookshelf-books">
+                      <div className="search-books-bar">
+                        <Link className="close-search" to='/'>Close</Link>
+                        <div className="search-books-input-wrapper">
+                          <form
+                          onSubmit = {(e) => e.preventDefault()}
+                          >
+                            <input 
+                               type="text" 
+                               placeholder="Search by title or author"
+                               value = {query}
+                               onChange = {(event) => this.updateQuery(event.target.value)}
+                               />
+                          </form>
+                        </div>
+                      </div>
+                    <div className="search-books-results">
+                    <ol className="books-grid">
+                    {showingBooks.map((book) => (
+                       <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
                             <div className="book-cover" 
@@ -76,15 +76,14 @@ state = {
                           <div className="book-authors">{book.authors.join(', ')}</div>
                         </div>
                       </li>
-                      ))}
-                
-              </ol>
-            </div>
-          </div>
+                    	))}
+                    </ol>
+                    </div>
+                  </div>       
+             
 			)
-		 
 	}
+	
 }
-
 
 export default Search

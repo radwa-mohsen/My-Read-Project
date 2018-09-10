@@ -32,13 +32,13 @@ render(){
             <div className="list-books-content">
               <div>
                 {shelfsCategory.map((shelf) => (
-                    <div className="bookshelf">
+                    <div key={shelf.name} className="bookshelf">
 
                   <h2 className="bookshelf-title">{shelf.name}</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
                     {shelf.books.map((book) => (
-                       <li>
+                       <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
                             <div className="book-cover" 
