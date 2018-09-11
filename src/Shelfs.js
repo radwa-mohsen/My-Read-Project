@@ -9,8 +9,10 @@ onShelfUpdate = (book,shelfName) => {
   this.props.onShelfUpdate(book,shelfName)
 }
 render(){
+  //to handle the problem of books have no thimbnail
   const coverImage = "../imgs/coverImage.png"
-		const {AllShelfsBooks} = this.props
+    const {AllShelfsBooks} = this.props
+    // the three shelfs can the user choose between them
 		const shelfsCategory = [
         {
         	name : "Read",
@@ -32,12 +34,14 @@ render(){
             </div>
             <div className="list-books-content">
               <div>
+                {/* loop inside shelfs except none */}
                 {shelfsCategory.map((shelf) => (
                     <div key={shelf.name} className="bookshelf">
 
                   <h2 className="bookshelf-title">{shelf.name}</h2>
                   <div className="bookshelf-books">
                     <ol className="books-grid">
+                    {/* loop inside the book in specific shelf */}
                     {shelf.books.map((book) => (
                        <li key={book.id}>
                         <div className="book">
@@ -46,12 +50,13 @@ render(){
                             style={{
                             width: 128, 
                             height: 193 , 
+                            // handle the problem of no thumbnail
                             backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : coverImage})`
                          }}></div>
                             <div className="book-shelf-changer">
                               <select value={book.shelf} onChange={e => this.onShelfUpdate(book, e.target.value)}>
                                 <option value="move" disabled>Move to...</option>
-
+                                 {/* mark on the chosen shelf and the default to non */}
                                 <option value="currentlyReading">{(book.shelf ==="currentlyReading") && "✔"} Currently Reading</option>
                                 <option value="wantToRead">{(book.shelf ==="wantToRead") && "✔"} Want to Read</option>
                                 <option value="read">{(book.shelf ==="read") && "✔"} Read</option>
@@ -60,6 +65,7 @@ render(){
                             </div>
                             </div>
                           <div className="book-title">{book.title}</div>
+                          {/* handle the problem of no authors */}
                           <div className="book-authors">${book.authors ? book.authors.join(', ') : "no available author" }</div>
                         </div>
                       </li>

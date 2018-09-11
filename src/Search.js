@@ -1,6 +1,5 @@
 import React ,{Component} from 'react'
 import { Link } from 'react-router-dom'
-import escapeRegExp from 'escape-string-regexp'
 
 
 class Search extends Component{
@@ -16,6 +15,7 @@ class Search extends Component{
 		this.setState({query:''})
 	}
 onShelfUpdate = (book,shelfName) => {
+  this.clearQuery()
   this.props.onShelfUpdate(book,shelfName)
 }
 
@@ -27,14 +27,7 @@ render(){
     const coverImage = "../imgs/coverImage.png"
     const {query } = this.state
     const {SearchedBooks} = this.props
-    let showingBooks
-    if(query){
-			const match = new RegExp(escapeRegExp(query),'i')
-			showingBooks = SearchedBooks.filter((book) => match.test(book.title) || match.test(book.authors)) 
-		}
-		else{
-			showingBooks = SearchedBooks
-		}
+    
 		
 		return(
                   <div className="bookshelf-books">
@@ -56,7 +49,8 @@ render(){
                       </div>
                     <div className="search-books-results">
                     <ol className="books-grid">
-                    {showingBooks.map((book) => (
+                    {/* loop inside the result of search */}
+                    {SearchedBooks.map((book) => (
                        <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
@@ -64,12 +58,13 @@ render(){
                             style={{
                             width: 128, 
                             height: 193 , 
+                            // handle the problem of no thumbnail
                             backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : coverImage})`
                          }}></div>
                             <div className="book-shelf-changer">
                               <select value={book.shelf} onChange={e => this.onShelfUpdate(book, e.target.value)}>
                                 <option value="move" disabled>Move to...</option>
-
+                                {/* mark on the chosen shelf and the default to non */}
                                 <option value="currentlyReading">{(book.shelf ==="currentlyReading") && "✔"} Currently Reading</option>
                                 <option value="wantToRead">{(book.shelf ==="wantToRead") && "✔"} Want to Read</option>
                                 <option value="read">{(book.shelf ==="read") && "✔"} Read</option>
@@ -78,14 +73,14 @@ render(){
                             </div>
                             </div>
                           <div className="book-title">{book.title}</div>
+                          {/* handle the problem of no authors */}
                           <div className="book-authors">${book.authors ? book.authors.join(', ') : "no available author" }</div>
                         </div>
                       </li>
                     	))}
                     </ol>
                     </div>
-                  </div>       
-             
+                  </div>          
 			)
 	}
 	
