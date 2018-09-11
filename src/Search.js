@@ -14,10 +14,10 @@ class Search extends Component{
 	clearQuery = () =>{
 		this.setState({query:''})
 	}
-onShelfUpdate = (book,shelfName) => {
-  this.clearQuery()
-  this.props.onShelfUpdate(book,shelfName)
-}
+// onShelfUpdate = (book,shelfName) => {
+//   this.clearQuery()
+//   this.props.onShelfUpdate(book,shelfName)
+// }
 
 searchUpdate = (query) =>{
   this.props.searchUpdate(query)
@@ -62,13 +62,13 @@ render(){
                             backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : coverImage})`
                          }}></div>
                             <div className="book-shelf-changer">
-                              <select value={book.shelf} onChange={e => this.onShelfUpdate(book, e.target.value)}>
+                              <select value={book.shelf} onChange={e =>  this.props.onShelfUpdate(book, e.target.value)}>  
                                 <option value="move" disabled>Move to...</option>
                                 {/* mark on the chosen shelf and the default to non */}
-                                <option value="currentlyReading">{(book.shelf ==="currentlyReading") && "✔"} Currently Reading</option>
-                                <option value="wantToRead">{(book.shelf ==="wantToRead") && "✔"} Want to Read</option>
-                                <option value="read">{(book.shelf ==="read") && "✔"} Read</option>
-                                <option value="none">{(book.shelf ==="none") && "✔"}None</option>
+                                <option value="currentlyReading"> Currently Reading</option>
+                                <option value="wantToRead"> Want to Read</option>
+                                <option value="read"> Read</option>
+                                <option value="none">None</option>
                               </select>
                             </div>
                             </div>

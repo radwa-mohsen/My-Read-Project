@@ -48,14 +48,17 @@ class BooksApp extends React.Component {
       //now we edit the shelf property to the choosen by the user
   
       updateBook.shelf = shelfName
+
      // now we insert the book with new shelf into the main books array
      //to keep the same choice after refresh we have to update the database
      BooksAPI.update(updateBook,shelfName).then(() =>{
-  
-      this.setState({
-        AllShelfsBooks: [...AllShelfsBooks.slice(0, updateIndex), updateBook, ...AllShelfsBooks.slice(updateIndex + 1)],
-        SearchedBooks:[]
+      this.setState((state)=>({
+        AllShelfsBooks : state.AllShelfsBooks.concat([updateBook]),
+        SearchedBooks: [...SearchedBooks.slice(0, updateIndex), updateBook, ...SearchedBooks.slice(updateIndex + 1)]
+
       })
+       
+      )
      })
     }
   searchUpdate = (query) => {
@@ -86,19 +89,23 @@ class BooksApp extends React.Component {
           })
         }
       })
+    }else{
+      this.setState({
+        SearchedBooks :[]
+      })
     }
   }
   render() {
     return (
       <div className="app">
         
-          <Route path="/search" render = {({history}) => (
+          <Route path="/search" render = {() => (
                <Search AllShelfsBooks = {this.state.AllShelfsBooks}
                        SearchedBooks = {this.state.SearchedBooks}
                searchUpdate = {(query) => {this.searchUpdate(query)}}
                   onShelfUpdate = {(book, shelfName) =>{
                     this.onShelfUpdateSearch(book, shelfName)
-                    history.push('/')
+                   
                   }}/>
           	)}/>
 
