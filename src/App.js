@@ -55,7 +55,6 @@ class BooksApp extends React.Component {
       this.setState({
         AllShelfsBooks: [...AllShelfsBooks.slice(0, updateIndex), updateBook, ...AllShelfsBooks.slice(updateIndex + 1)],
         SearchedBooks:[]
-         
       })
      })
     }
@@ -63,21 +62,17 @@ class BooksApp extends React.Component {
     const {AllShelfsBooks} = this.state;
     if (query.length !== 0) {
       BooksAPI.search(query,30).then((books) => {
-      
         if (books && books.length > 0) {
           books = books.filter((book) => (book.authors||book.title))
           // to assign the serached books to "none" shelf except the books which already assigned by users to other shelfs
           books.map((book)=>{
             const i = AllShelfsBooks.filter(org => org.id === book.id)
-            console.log(i[0])
-
+            
             if(i.length<1){
-              book.shelf = "none"
-              
+             return book.shelf = "none"            
             }
             else{
-              book.shelf = i[0].shelf
-              console.log(book.shelf)
+             return book.shelf = i[0].shelf
             }
           }         
          )
