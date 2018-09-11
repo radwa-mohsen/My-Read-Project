@@ -9,6 +9,7 @@ onShelfUpdate = (book,shelfName) => {
   this.props.onShelfUpdate(book,shelfName)
 }
 render(){
+  const coverImage = "../imgs/coverImage.png"
 		const {AllShelfsBooks} = this.props
 		const shelfsCategory = [
         {
@@ -45,7 +46,7 @@ render(){
                             style={{
                             width: 128, 
                             height: 193 , 
-                            backgroundImage: `url(${book.imageLinks.thumbnail})`
+                            backgroundImage: `url(${book.imageLinks ? book.imageLinks.thumbnail : coverImage})`
                          }}></div>
                             <div className="book-shelf-changer">
                               <select value={book.shelf} onChange={e => this.onShelfUpdate(book, e.target.value)}>
@@ -54,12 +55,12 @@ render(){
                                 <option value="currentlyReading">{(book.shelf ==="currentlyReading") && "✔"} Currently Reading</option>
                                 <option value="wantToRead">{(book.shelf ==="wantToRead") && "✔"} Want to Read</option>
                                 <option value="read">{(book.shelf ==="read") && "✔"} Read</option>
-                                <option value="none">None</option>
+                                <option value="none">{(book.shelf ==="none") && "✔"}None</option>
                               </select>
                             </div>
                             </div>
                           <div className="book-title">{book.title}</div>
-                          <div className="book-authors">{book.authors.join(', ')}</div>
+                          <div className="book-authors">${book.authors ? book.authors.join(', ') : "no available author" }</div>
                         </div>
                       </li>
                     	))}
