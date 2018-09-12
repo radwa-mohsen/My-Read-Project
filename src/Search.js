@@ -32,7 +32,7 @@ render(){
 		return(
                   <div className="bookshelf-books">
                       <div className="search-books-bar">
-                        <Link className="close-search" to='/'>Close</Link>
+                        <Link className="close-search" to='/' onClick ={this.clearQuery}>Close</Link>
                         <div className="search-books-input-wrapper">
                           <form
                           onSubmit = {(e) => e.preventDefault()}
@@ -65,10 +65,10 @@ render(){
                               <select value={book.shelf} onChange={e =>  this.props.onShelfUpdate(book, e.target.value)}>  
                                 <option value="move" disabled>Move to...</option>
                                 {/* mark on the chosen shelf and the default to non */}
-                                <option value="currentlyReading"> Currently Reading</option>
-                                <option value="wantToRead"> Want to Read</option>
-                                <option value="read"> Read</option>
-                                <option value="none">None</option>
+                                <option value="currentlyReading"> {book.shelf === "currentlyReading" ? "✔Currently Reading" : "Currently Reading"}</option>
+                                <option value="wantToRead"> {book.shelf === "wantToRead" ? "✔Want to Read" : "Want to Read"}</option>
+                                <option value="read"> {book.shelf === "read" ? "✔Read" : "Read"}</option>
+                                <option value="none">{book.shelf === "none" ? "✔None" : "None"}</option>
                               </select>
                             </div>
                             </div>
